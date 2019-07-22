@@ -153,7 +153,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         update_tri_layer(_LOWER, _RAISE, _ADJUST);
 
         if (raiser_pressed) { // (4)
-          register_code(KC_LANG1); // macOS の場合は KC_LANG2
+          register_code(KC_LANG1); // macOS の場合は KC_LANG1
           unregister_code(KC_LANG1);
         }
         raiser_pressed = false;
