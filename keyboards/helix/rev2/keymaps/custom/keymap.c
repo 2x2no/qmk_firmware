@@ -568,8 +568,13 @@ void render_status(struct CharacterMatrix *matrix) {
 
   // Define layers here, Have not worked out how to have text displayed for each layer. Copy down the number you see and add a case for it below
   char buf[40];
+  char buf2[50];
   snprintf(buf,sizeof(buf), "Undef-%ld", layer_state);
-  matrix_write_P(matrix, PSTR("\nLayer: "));
+  snprintf(buf2,sizeof(buf2), "LED_MODE%d", rgblight_config.mode);
+
+  matrix_write_P(matrix, PSTR("\n"));
+  matrix_write(matrix, buf2);
+  matrix_write_P(matrix, PSTR(" "));
     switch (layer_state) {
         case L_BASE:
            matrix_write_P(matrix, PSTR("Default"));
