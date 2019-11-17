@@ -550,12 +550,21 @@ static void render_logo(struct CharacterMatrix *matrix) {
   //matrix_write_P(&matrix, PSTR(" Split keyboard kit"));
 }
 
-
-
 void render_status(struct CharacterMatrix *matrix) {
 
   // Render to mode icon
-  static char logo[][2][3]={{{0x95,0x96,0},{0xb5,0xb6,0}},{{0x97,0x98,0},{0xb7,0xb8,0}}};
+  static char logo[][3][3]={
+    {
+      {0x0,0x0,0},
+      {0x95,0x96,0},
+      {0xb5,0xb6,0}
+    },
+    {
+      {0x0,0x0,0},
+      {0x97,0x98,0},
+      {0xb7,0xb8,0}
+    }
+  };
   if(keymap_config.swap_lalt_lgui==false){
     matrix_write(matrix, logo[0][0]);
     matrix_write_P(matrix, PSTR("\n"));
@@ -567,31 +576,40 @@ void render_status(struct CharacterMatrix *matrix) {
   }
 
   // Define layers here, Have not worked out how to have text displayed for each layer. Copy down the number you see and add a case for it below
-  char buf[40];
-  char buf2[50];
-  snprintf(buf,sizeof(buf), "Undef-%ld", layer_state);
-  snprintf(buf2,sizeof(buf2), "LED_MODE%d", rgblight_config.mode);
-
-  matrix_write_P(matrix, PSTR("\n"));
-  matrix_write(matrix, buf2);
+  char rgblight[40];
   matrix_write_P(matrix, PSTR(" "));
-    switch (layer_state) {
-        case L_BASE:
-           matrix_write_P(matrix, PSTR("Default"));
-           break;
-        case L_RAISE:
-           matrix_write_P(matrix, PSTR("Raise"));
-           break;
-        case L_LOWER:
-           matrix_write_P(matrix, PSTR("Lower"));
-           break;
-        case L_ADJUST:
-        case L_ADJUST_TRI:
-           matrix_write_P(matrix, PSTR("Adjust"));
-           break;
-        default:
-           matrix_write(matrix, buf);
-    }
+  snprintf(rgblight,sizeof(rgblight), "LIGHT_MODE%d", rgblight_config.mode);
+  matrix_write(matrix, rgblight);
+
+  if(keymap_config.swap_lalt_lgui==false){
+    matrix_write_P(matrix, PSTR("\n"));
+    matrix_write(matrix, logo[0][2]);
+  }else{
+    matrix_write_P(matrix, PSTR("\n"));
+    matrix_write(matrix, logo[1][2]);
+  }
+
+  char buf[40];
+  snprintf(buf,sizeof(buf), "Undef-%ld", layer_state);
+  matrix_write_P(matrix, PSTR(" "));
+  matrix_write_P(matrix, PSTR("Layer: "));
+  switch (layer_state) {
+      case L_BASE:
+          matrix_write_P(matrix, PSTR("Default"));
+          break;
+      case L_RAISE:
+          matrix_write_P(matrix, PSTR("Raise"));
+          break;
+      case L_LOWER:
+          matrix_write_P(matrix, PSTR("Lower"));
+          break;
+      case L_ADJUST:
+      case L_ADJUST_TRI:
+          matrix_write_P(matrix, PSTR("Adjust"));
+          break;
+      default:
+          matrix_write(matrix, buf);
+  }
 
   // Host Keyboard LED Status
   char led[40];
